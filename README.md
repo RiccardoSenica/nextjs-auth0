@@ -2,7 +2,6 @@
 
 ## To do
 
-- [ ] Add database schema
 - [ ] Add user authentication
 - [ ] Add user roles
 - [ ] Add user permissions
