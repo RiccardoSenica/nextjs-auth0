@@ -6,6 +6,8 @@
 - [ ] Add user profile and settings (i.e. language)
 - [ ] Add user roles
 - [ ] Add user permissions
+- [ ] Add module CRUD with protected routes
+- [ ] Customize Auth0 login page
 - [ ] Add user notifications and emails
 - [ ] Add user invoices
 - [ ] Add cron jobs to import data
