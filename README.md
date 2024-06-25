@@ -2,10 +2,10 @@
 
 ## To do
 
-- [ ] Add user authentication
+- [ ] Add user creation in database
+- [ ] Add user profile and settings (i.e. language)
 - [ ] Add user roles
 - [ ] Add user permissions
-- [ ] Add user profile
 - [ ] Add user notifications and emails
 - [ ] Add user invoices
 - [ ] Add cron jobs to import data
