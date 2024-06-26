@@ -2,6 +2,9 @@ import prisma from '@prisma/prisma';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
+  const body = await request.json();
+  console.log('request', request, 'body', body);
+
   const { email } = await request.json();
 
   if (email) {
