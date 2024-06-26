@@ -3,6 +3,7 @@
 ## To do
 
 - [ ] Add user creation in database
+- [ ] Add middleware for authentication
 - [ ] Add user profile and settings (i.e. language)
 - [ ] Add user roles
 - [ ] Add user permissions
