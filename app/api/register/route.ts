@@ -14,9 +14,6 @@ export const POST = async (request: NextRequest) => {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const body = await request.json();
-  console.log('request', request, 'body', body);
-
   const { email } = await request.json();
 
   if (email) {
@@ -34,5 +31,5 @@ export const POST = async (request: NextRequest) => {
     });
   }
 
-  return NextResponse.json({ message: email });
+  return NextResponse.json({ success: true });
 };
