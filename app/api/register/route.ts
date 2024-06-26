@@ -1,11 +1,18 @@
-import { getSession, withApiAuthRequired } from '@auth0/nextjs-auth0';
 import prisma from '@prisma/prisma';
 import { NextRequest, NextResponse } from 'next/server';
 
-export const POST = withApiAuthRequired(async (request: NextRequest) => {
-  const session = await getSession();
+export const POST = async (request: NextRequest) => {
+  const authHeader = request.headers.get('Authorization');
 
-  console.log('Session', session);
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  const token = authHeader.split(' ')[1];
+
+  if (token !== process.env.AUTH0_API_SECRET_KEY) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
 
   const body = await request.json();
   console.log('request', request, 'body', body);
@@ -28,4 +35,4 @@ export const POST = withApiAuthRequired(async (request: NextRequest) => {
   }
 
   return NextResponse.json({ message: email });
-});
+};
