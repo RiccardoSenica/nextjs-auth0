@@ -8,7 +8,9 @@ export default withPageAuthRequired(function Profile() {
 
   useEffect(() => {
     (async () => {
-      const res = await fetch(`${window.location.origin}/api/profile`);
+      const res = await fetch(
+        `${window.location.origin}/api/protected/profile`
+      );
       setUser(await res.json());
     })();
   }, []);
