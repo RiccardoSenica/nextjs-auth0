@@ -3,5 +3,5 @@ import { withMiddlewareAuthRequired } from '@auth0/nextjs-auth0/edge';
 export default withMiddlewareAuthRequired();
 
 export const config = {
-  matcher: ['/api/:path*', '/module/:path*', '/user']
+  matcher: ['/api/protected/:path*', '/module/:path*', '/user']
 };
