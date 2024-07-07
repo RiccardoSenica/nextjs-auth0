@@ -1,31 +1,42 @@
 import { getSession, withApiAuthRequired } from '@auth0/nextjs-auth0';
 import { CustomerFormType } from '@prisma/client';
 import prisma from '@prisma/prisma';
-import { CustomerForm } from '@utils/types';
+import { createErrorResponse } from '@utils/createErrorResponse';
+import { ContextSchema, CustomerForm } from '@utils/types';
 import { NextRequest, NextResponse } from 'next/server';
 
-export const GET = withApiAuthRequired(async request => {
+export const GET = withApiAuthRequired(async (request, context) => {
   const session = await getSession();
 
-  const x = console.log('request', request);
-
-  const result = await prisma.customerForm.findUnique({
-    where: {
-      id: 'params.id',
-      createdBy: {
-        email: session?.user.email
-      }
-    }
-  });
-
-  if (!result) {
-    return NextResponse.json(
-      { success: false, message: 'Something went wrong.' },
-      { status: 500 }
-    );
+  const validatedContext = ContextSchema.safeParse(context);
+  if (!validatedContext.success) {
+    return createErrorResponse('Invalid context format', 400);
   }
 
-  return NextResponse.json({ success: true, data: [] });
+  const { id } = validatedContext.data.params;
+  const userEmail = session?.user?.email;
+
+  if (!userEmail) {
+    return createErrorResponse('Session not found or invalid', 401);
+  }
+
+  try {
+    const customerForm = await prisma.customerForm.findUnique({
+      where: {
+        id,
+        createdBy: { email: userEmail }
+      }
+    });
+
+    if (!customerForm) {
+      return createErrorResponse('Customer form not found', 404);
+    }
+
+    return NextResponse.json({ success: true, data: customerForm });
+  } catch (error) {
+    console.error('Error fetching customer form:', error);
+    return createErrorResponse('Internal server error', 500);
+  }
 });
 
 export async function PUT(
