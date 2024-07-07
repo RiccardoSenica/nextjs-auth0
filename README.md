@@ -2,7 +2,7 @@
 
 ## To do
 
-- [ ] Add user creation in database
+- [ ] Get premium Vercel account for database
 - [ ] Add middleware for authentication
 - [ ] Add user profile and settings (i.e. language)
 - [ ] Add user roles

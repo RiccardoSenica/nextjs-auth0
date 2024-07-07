@@ -8,29 +8,29 @@ datasource db {
   directUrl = env("DATABASE_URL_NON_POOLING") // uses a direct connection
 }
 
-enum ModuleType {
+enum CustomerFormType {
   TYPE1
   TYPE2
   TYPE3
 }
 
 model User {
-  id        String   @id @default(cuid())
-  name      String?
-  email     String   @unique
-  deleted   Boolean  @default(false)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  Module    Module[]
+  id           String         @id @default(cuid())
+  name         String?
+  email        String         @unique
+  deleted      Boolean        @default(false)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  CustomerForm CustomerForm[]
 }
 
-model Module {
-  id          Float      @id @unique
-  type        ModuleType
+model CustomerForm {
+  id          String           @id @default(cuid())
+  type        CustomerFormType
   text        String
-  deleted     Boolean    @default(false)
+  deleted     Boolean          @default(false)
   createdById String
-  createdBy   User       @relation(fields: [createdById], references: [id])
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  createdBy   User             @relation(fields: [createdById], references: [id])
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
 }

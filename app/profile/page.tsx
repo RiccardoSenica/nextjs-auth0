@@ -1,6 +1,7 @@
 'use client';
 
 import { withPageAuthRequired } from '@auth0/nextjs-auth0/client';
+import axios from 'axios';
 import { useEffect, useState } from 'react';
 
 export default withPageAuthRequired(function Profile() {
@@ -8,18 +9,16 @@ export default withPageAuthRequired(function Profile() {
 
   useEffect(() => {
     (async () => {
-      const res = await fetch(
-        `${window.location.origin}/api/protected/profile`
-      );
-      setUser(await res.json());
+      const response = await axios.get('/api/protected/profile');
+
+      setUser(response.data);
     })();
   }, []);
 
   return (
-    <main>
+    <>
       <h1>Profile (fetched from API)</h1>
-      <h3>User</h3>
-      <pre data-testid='module'>{JSON.stringify(user, null, 2)}</pre>
-    </main>
+      {JSON.stringify(user, null, 2)}
+    </>
   );
 });
