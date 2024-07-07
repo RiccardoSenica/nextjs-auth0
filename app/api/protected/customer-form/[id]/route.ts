@@ -1,22 +1,83 @@
+import { getSession, withApiAuthRequired } from '@auth0/nextjs-auth0';
+import { CustomerFormType } from '@prisma/client';
+import prisma from '@prisma/prisma';
+import { CustomerForm } from '@utils/types';
 import { NextRequest, NextResponse } from 'next/server';
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { id: number } }
-) {
-  return NextResponse.json(`GET ${params.id}`);
-}
+export const GET = withApiAuthRequired(async request => {
+  const session = await getSession();
+
+  const x = console.log('request', request);
+
+  const result = await prisma.customerForm.findUnique({
+    where: {
+      id: 'params.id',
+      createdBy: {
+        email: session?.user.email
+      }
+    }
+  });
+
+  if (!result) {
+    return NextResponse.json(
+      { success: false, message: 'Something went wrong.' },
+      { status: 500 }
+    );
+  }
+
+  return NextResponse.json({ success: true, data: [] });
+});
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: number } }
+  { params }: { params: CustomerForm }
 ) {
-  return NextResponse.json(`PUT ${params.id}`);
+  const session = await getSession();
+
+  const result = await prisma.customerForm.update({
+    where: {
+      id: params.id,
+      createdBy: {
+        email: session?.user.email
+      }
+    },
+    data: {
+      type: params.type as CustomerFormType,
+      text: params.text
+    }
+  });
+
+  if (!result) {
+    return NextResponse.json(
+      { success: false, message: 'Something went wrong.' },
+      { status: 500 }
+    );
+  }
+
+  return NextResponse.json({ success: true, data: result });
 }
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: number } }
+  { params }: { params: { id: string } }
 ) {
-  return NextResponse.json(`DELETE ${params.id}`);
+  const session = await getSession();
+
+  const result = await prisma.customerForm.delete({
+    where: {
+      id: params.id,
+      createdBy: {
+        email: session?.user.email
+      }
+    }
+  });
+
+  if (!result) {
+    return NextResponse.json(
+      { success: false, message: 'Something went wrong.' },
+      { status: 500 }
+    );
+  }
+
+  return NextResponse.json({ success: true });
 }

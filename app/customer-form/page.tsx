@@ -10,6 +10,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { CustomerFormType } from '@prisma/client';
 import {
   CustomerForm,
+  CustomerFormCreate,
+  CustomerFormCreateSchema,
   CustomerFormListSchema,
   CustomerFormSchema
 } from '@utils/types';
@@ -17,11 +19,11 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
-export default function Modules() {
-  const [modules, setModules] = useState<CustomerForm[]>([]);
+export default function CustomerForms() {
+  const [customerForms, setCustomerForms] = useState<CustomerForm[]>([]);
 
-  const form = useForm<CustomerForm>({
-    resolver: zodResolver(CustomerFormSchema),
+  const form = useForm<CustomerFormCreate>({
+    resolver: zodResolver(CustomerFormCreateSchema),
     defaultValues: {
       type: CustomerFormType.TYPE1,
       text: ''
@@ -41,11 +43,11 @@ export default function Modules() {
         return;
       }
 
-      setModules(validatedResponse.data);
+      setCustomerForms(validatedResponse.data);
     })();
   }, []);
 
-  async function handleSubmit(values: CustomerForm) {
+  async function handleSubmit(values: CustomerFormCreate) {
     console.log('values', values);
 
     try {
@@ -62,6 +64,8 @@ export default function Modules() {
         }
       );
 
+      console.log('response', response.data.data);
+
       const validatedResponse = CustomerFormSchema.safeParse(
         response.data.data
       );
@@ -71,7 +75,7 @@ export default function Modules() {
         return;
       }
 
-      setModules([...modules, validatedResponse.data]);
+      setCustomerForms([...customerForms, validatedResponse.data]);
     } catch (error) {
       console.error(error);
     }
@@ -79,15 +83,15 @@ export default function Modules() {
 
   return (
     <>
-      <h1>Modules</h1>
-      {modules &&
-        modules.map(module => (
-          <div key={module.id}>
-            <h2>{module.type}</h2>
-            <p>{module.text}</p>
+      <h1>Forms</h1>
+      {customerForms &&
+        customerForms.map(customerForm => (
+          <div key={customerForm.id}>
+            <h2>{customerForm.type}</h2>
+            <p>{customerForm.text}</p>
           </div>
         ))}
-      <h1>Create Module</h1>
+      <h1>New form</h1>
       <FormProvider {...form}>
         <form onSubmit={form.handleSubmit(handleSubmit)}>
           <FormField
@@ -102,7 +106,7 @@ export default function Modules() {
               </FormItem>
             )}
           />
-          <Button type='submit'>Submit</Button>
+          <Button type='submit'>Create</Button>
         </form>
       </FormProvider>
     </>

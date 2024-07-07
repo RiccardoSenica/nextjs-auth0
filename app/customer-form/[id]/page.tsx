@@ -1,9 +1,42 @@
 'use client';
 
+import { CustomerForm, CustomerFormSchema } from '@utils/types';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
+
 export default function SingleCustomerForm({
   params
 }: {
   params: { id: string };
 }) {
-  return <div>Module {params.id}</div>;
+  const [customerForm, setCustomerForm] = useState<CustomerForm | null>(null);
+
+  useEffect(() => {
+    (async () => {
+      const response = await axios.get(
+        `/api/protected/customer-form/${params.id}`
+      );
+
+      const validatedResponse = CustomerFormSchema.safeParse(
+        response.data.data
+      );
+
+      if (!validatedResponse.success) {
+        console.error(validatedResponse.error);
+        return;
+      }
+
+      setCustomerForm(validatedResponse.data);
+    })();
+  }, [params.id]);
+
+  if (!customerForm) {
+    return <div>Loading...</div>;
+  }
+
+  return (
+    <div>
+      Form {params.id} {JSON.stringify(customerForm)}
+    </div>
+  );
 }
