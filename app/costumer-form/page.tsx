@@ -60,7 +60,9 @@ export default function Modules() {
         }
       );
 
-      const validatedResponse = CustomerFormSchema.safeParse(response.data);
+      const validatedResponse = CustomerFormSchema.safeParse(
+        response.data.data
+      );
 
       if (!validatedResponse.success) {
         console.error(validatedResponse.error);

@@ -1,4 +1,5 @@
 import { getSession, withApiAuthRequired } from '@auth0/nextjs-auth0';
+import { CustomerForm } from '@prisma/client';
 import prisma from '@prisma/prisma';
 import { randomUUID } from 'crypto';
 import { NextResponse } from 'next/server';
@@ -6,20 +7,25 @@ import { NextResponse } from 'next/server';
 export const GET = withApiAuthRequired(async () => {
   const session = await getSession();
 
-  console.log('GET', session?.user);
+  try {
+    const userModules = await prisma.user.findUniqueOrThrow({
+      where: {
+        email: session?.user.email
+      },
+      include: {
+        CustomerForm: true
+      }
+    });
 
-  // const userModules = await prisma.user.findUniqueOrThrow({
-  //   where: {
-  //     email: session?.user.email
-  //   },
-  //   include: {
-  //     CustomerForm: true
-  //   }
-  // });
+    const customerForms: CustomerForm[] = userModules.CustomerForm;
 
-  // const customerForms: CustomerForm[] = userModules.CustomerForm;
-
-  return NextResponse.json([]);
+    return NextResponse.json({ success: true, data: customerForms });
+  } catch (error) {
+    return NextResponse.json(
+      { success: false, message: 'Something went wrong.' },
+      { status: 500 }
+    );
+  }
 });
 
 export const POST = withApiAuthRequired(async request => {
@@ -27,8 +33,6 @@ export const POST = withApiAuthRequired(async request => {
     const session = await getSession();
 
     const body = await request.json();
-
-    console.log('POST', session?.user);
 
     const newCustomerForm = await prisma.customerForm.create({
       data: {
