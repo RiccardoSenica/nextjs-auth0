@@ -16,10 +16,12 @@ import {
   CustomerFormSchema
 } from '@utils/types';
 import axios from 'axios';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
 export default function CustomerForms() {
+  const router = useRouter();
   const [customerForms, setCustomerForms] = useState<CustomerForm[]>([]);
 
   const form = useForm<CustomerFormCreate>({
@@ -47,9 +49,11 @@ export default function CustomerForms() {
     })();
   }, []);
 
-  async function handleSubmit(values: CustomerFormCreate) {
-    console.log('values', values);
+  const redirectToCustomerForm = (id: string) => {
+    router.push(`/customer-form/${id}`);
+  };
 
+  async function handleSubmit(values: CustomerFormCreate) {
     try {
       const response = await axios.post(
         '/api/protected/customer-form',
@@ -63,8 +67,6 @@ export default function CustomerForms() {
           }
         }
       );
-
-      console.log('response', response.data.data);
 
       const validatedResponse = CustomerFormSchema.safeParse(
         response.data.data
@@ -86,9 +88,12 @@ export default function CustomerForms() {
       <h1>Forms</h1>
       {customerForms &&
         customerForms.map(customerForm => (
-          <div key={customerForm.id}>
-            <h2>{customerForm.type}</h2>
-            <p>{customerForm.text}</p>
+          <div
+            onClick={() => redirectToCustomerForm(customerForm.id)}
+            key={customerForm.id}
+          >
+            {customerForm.text}
+            of type {customerForm.type}
           </div>
         ))}
       <h1>New form</h1>
