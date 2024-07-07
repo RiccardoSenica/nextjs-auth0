@@ -2,18 +2,21 @@ import { getSession, withApiAuthRequired } from '@auth0/nextjs-auth0';
 import { CustomerFormType } from '@prisma/client';
 import prisma from '@prisma/prisma';
 import { createErrorResponse } from '@utils/createErrorResponse';
-import { ContextSchema, CustomerForm } from '@utils/types';
+import { CustomerForm } from '@utils/types';
+import { validateContext } from '@utils/validateContext';
 import { NextRequest, NextResponse } from 'next/server';
 
 export const GET = withApiAuthRequired(async (request, context) => {
   const session = await getSession();
 
-  const validatedContext = ContextSchema.safeParse(context);
-  if (!validatedContext.success) {
-    return createErrorResponse('Invalid context format', 400);
+  let id;
+
+  try {
+    id = validateContext(context);
+  } catch (error) {
+    return createErrorResponse('Internal server error', 500);
   }
 
-  const { id } = validatedContext.data.params;
   const userEmail = session?.user?.email;
 
   if (!userEmail) {
@@ -68,15 +71,20 @@ export async function PUT(
   return NextResponse.json({ success: true, data: result });
 }
 
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export const DELETE = withApiAuthRequired(async (request, context) => {
   const session = await getSession();
+
+  let id;
+
+  try {
+    id = validateContext(context);
+  } catch (error) {
+    return createErrorResponse('Internal server error', 500);
+  }
 
   const result = await prisma.customerForm.delete({
     where: {
-      id: params.id,
+      id: id,
       createdBy: {
         email: session?.user.email
       }
@@ -91,4 +99,4 @@ export async function DELETE(
   }
 
   return NextResponse.json({ success: true });
-}
+});
