@@ -32,7 +32,9 @@ export default function Modules() {
     (async () => {
       const response = await axios.get('/api/protected/customer-form');
 
-      const validatedResponse = CustomerFormListSchema.safeParse(response.data);
+      const validatedResponse = CustomerFormListSchema.safeParse(
+        response.data.data
+      );
 
       if (!validatedResponse.success) {
         console.error(validatedResponse.error);
