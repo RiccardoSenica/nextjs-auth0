@@ -1,5 +1,9 @@
 import { z } from 'zod';
 
+export const ProfileSchema = z.object({
+  email: z.string()
+});
+
 export const CustomerFormCreateSchema = z.object({
   type: z.string(),
   text: z.string()

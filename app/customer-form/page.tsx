@@ -85,36 +85,58 @@ export default withPageAuthRequired(function CustomerForms() {
   }
 
   return (
-    <>
-      <h1>Forms</h1>
-      {customerForms &&
-        customerForms.map(customerForm => (
-          <div
-            onClick={() => redirectToCustomerForm(customerForm.id)}
-            key={customerForm.id}
+    <div className='mx-auto max-w-md'>
+      <div className='my-8'>
+        <h1 className='mb-4 text-2xl font-bold'>Forms</h1>
+        <div className='grid grid-cols-1 gap-4'>
+          {customerForms &&
+            customerForms.map(customerForm => (
+              <div
+                className='cursor-pointer rounded-lg border p-4 hover:bg-gray-100'
+                onClick={() => redirectToCustomerForm(customerForm.id)}
+                key={customerForm.id}
+              >
+                <p className='font-semibold'>{customerForm.text}</p>
+                <p className='text-sm text-gray-600'>
+                  Type: {customerForm.type}
+                </p>
+              </div>
+            ))}
+        </div>
+      </div>
+
+      <div className='my-8'>
+        <h1 className='mb-4 text-2xl font-bold'>New form</h1>
+        <FormProvider {...form}>
+          <form
+            onSubmit={form.handleSubmit(handleSubmit)}
+            className='space-y-4'
           >
-            {customerForm.text}
-            of type {customerForm.type}
-          </div>
-        ))}
-      <h1>New form</h1>
-      <FormProvider {...form}>
-        <form onSubmit={form.handleSubmit(handleSubmit)}>
-          <FormField
-            control={form.control}
-            name='text'
-            render={({ field }) => (
-              <FormItem>
-                <FormMessage />
-                <FormControl>
-                  <Input placeholder='name' {...field} />
-                </FormControl>
-              </FormItem>
-            )}
-          />
-          <Button type='submit'>Create</Button>
-        </form>
-      </FormProvider>
-    </>
+            <FormField
+              control={form.control}
+              name='text'
+              render={({ field }) => (
+                <FormItem className='flex flex-col'>
+                  <FormMessage />
+                  <FormControl>
+                    <Input
+                      placeholder='Name'
+                      {...field}
+                      className='rounded-lg border p-2'
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <Button
+              type='submit'
+              className='rounded-lg bg-blue-500 p-2 text-white hover:bg-blue-600'
+            >
+              Create
+            </Button>
+          </form>
+        </FormProvider>
+      </div>
+    </div>
   );
 });

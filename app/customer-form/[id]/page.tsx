@@ -1,7 +1,6 @@
 'use client';
 
 import { withPageAuthRequired } from '@auth0/nextjs-auth0/client';
-import { Button } from '@components/Button';
 import { CustomerForm, CustomerFormSchema } from '@utils/types';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
@@ -61,9 +60,19 @@ export default withPageAuthRequired(function SingleCustomerForm({
   }
 
   return (
-    <>
-      <div>Form {JSON.stringify(customerForm)}</div>
-      <Button onClick={handleDelete}>Delete</Button>
-    </>
+    <div className='mx-auto my-4 max-w-md'>
+      <div className='mb-2'>
+        <span className='text-lg font-bold'>Form data</span>
+        <pre className='mt-2 rounded bg-gray-100 p-2'>
+          {JSON.stringify(customerForm, null, 2)}
+        </pre>
+      </div>
+      <button
+        onClick={handleDelete}
+        className='rounded bg-red-500 px-4 py-2 font-bold text-white hover:bg-red-700'
+      >
+        Delete
+      </button>
+    </div>
   );
 });
