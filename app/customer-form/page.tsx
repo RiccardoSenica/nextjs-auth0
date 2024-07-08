@@ -1,6 +1,5 @@
 'use client';
 
-import { withPageAuthRequired } from '@auth0/nextjs-auth0/client';
 import { Button } from '@components/Button';
 import { FormControl } from '@components/FormControl';
 import { FormMessage } from '@components/FormMessage';
@@ -21,7 +20,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
-export default withPageAuthRequired(function CustomerForms() {
+export default function CustomerForms() {
   const router = useRouter();
   const [customerForms, setCustomerForms] = useState<CustomerForm[]>([]);
 
@@ -139,4 +138,4 @@ export default withPageAuthRequired(function CustomerForms() {
       </div>
     </div>
   );
-});
+}

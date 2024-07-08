@@ -1,9 +1,4 @@
-# Water utility portal
-
-## To do
-
-- [ ] Get premium Vercel account for database
-- [ ] Add middleware for authentication
+# Auth0 demo
 
 ## Commands
 

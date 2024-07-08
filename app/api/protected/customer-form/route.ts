@@ -1,9 +1,9 @@
-import { getSession, withApiAuthRequired } from '@auth0/nextjs-auth0';
+import { getSession } from '@auth0/nextjs-auth0';
 import { CustomerForm } from '@prisma/client';
 import prisma from '@prisma/prisma';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
-export const GET = withApiAuthRequired(async () => {
+export async function GET() {
   const session = await getSession();
 
   try {
@@ -25,9 +25,9 @@ export const GET = withApiAuthRequired(async () => {
       { status: 500 }
     );
   }
-});
+}
 
-export const POST = withApiAuthRequired(async request => {
+export async function POST(request: NextRequest) {
   try {
     const session = await getSession();
 
@@ -59,4 +59,4 @@ export const POST = withApiAuthRequired(async request => {
       { status: 500 }
     );
   }
-});
+}

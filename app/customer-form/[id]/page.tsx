@@ -1,12 +1,11 @@
 'use client';
 
-import { withPageAuthRequired } from '@auth0/nextjs-auth0/client';
 import { CustomerForm, CustomerFormSchema } from '@utils/types';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
-export default withPageAuthRequired(function SingleCustomerForm({
+export default function SingleCustomerForm({
   params
 }: {
   params: { id: string };
@@ -75,4 +74,4 @@ export default withPageAuthRequired(function SingleCustomerForm({
       </button>
     </div>
   );
-});
+}
