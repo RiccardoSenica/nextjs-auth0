@@ -10,10 +10,7 @@
     "format": "prettier --config .prettierrc 'app/' --write",
     "typecheck": "tsc --noEmit",
     "prepare": "husky install",
-    "vercel:link": "vercel link",
-    "vercel:env": "vercel env pull .env",
     "prisma:migrate": "npx prisma migrate dev",
-    "prisma:push": "npx prisma db push",
     "prisma:generate": "npx prisma generate",
     "prisma:reset": "npx prisma db push --force-reset"
   },

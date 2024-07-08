@@ -2,28 +2,22 @@
 
 ## Commands
 
-Install vercel cli
+Install dependencies
 
 ```bash
-yarn add -g vercel@latest
+yarn
 ```
 
-Link to vercel
+Run Postgres on Docker
 
 ```bash
-yarn vercel:link
+docker-compose up
 ```
 
-Pull env variables from vercel
+Run Prisma migrations
 
 ```bash
-yarn vercel:env
-```
-
-Push Prisma schema to vercel
-
-```bash
-yarn db:push
+yarn prisma:migrate
 ```
 
 Generate Prisma client
@@ -38,8 +32,24 @@ Reset Prisma database
 yarn db:reset
 ```
 
-Run on Docker
+## Auth0 Webhook
+
+Auth0 Flow to register new users
 
 ```bash
-docker-compose up --build
+const axios = require('axios');
+
+exports.onExecutePostUserRegistration = async (event) => {
+  await axios.post(event.secrets.WEBHOOK_URL, { email: event.user.email }, {
+    headers: {
+      'Authorization': `Bearer ${event.secrets.AUTH0_API_SECRET_KEY}`,
+      'Content-Type': 'application/json'
+    }
+  });
+};
 ```
+
+Add the following secrets to your Flow:
+
+- `WEBHOOK_URL`: The URL of your webhook.
+- `AUTH0_API_SECRET_KEY`: The Auth0 API secret key.
