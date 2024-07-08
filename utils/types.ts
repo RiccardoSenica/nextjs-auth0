@@ -7,6 +7,14 @@ export const CustomerFormCreateSchema = z.object({
 
 export type CustomerFormCreate = z.infer<typeof CustomerFormCreateSchema>;
 
+export const CustomerFormUpdateSchema = z.object({
+  id: z.string(),
+  type: z.string().optional(),
+  text: z.string().optional()
+});
+
+export type CustomerFormUpdate = z.infer<typeof CustomerFormUpdateSchema>;
+
 export const CustomerFormSchema = z.object({
   id: z.string(),
   type: z.string(),
@@ -19,8 +27,10 @@ export const CustomerFormListSchema = z.array(CustomerFormSchema);
 
 export type CustomerForm = z.infer<typeof CustomerFormSchema>;
 
-export const ContextSchema = z.object({
+export const ApiResponseContextSchema = z.object({
   params: z.object({
-    id: z.string()
+    id: z.string(),
+    type: z.string().optional(),
+    text: z.string().optional()
   })
 });

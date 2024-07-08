@@ -17,22 +17,27 @@ export default withPageAuthRequired(function SingleCustomerForm({
 
   useEffect(() => {
     (async () => {
-      const response = await axios.get(
-        `/api/protected/customer-form/${params.id}`
-      );
+      try {
+        const response = await axios.get(
+          `/api/protected/customer-form/${params.id}`
+        );
 
-      const validatedResponse = CustomerFormSchema.safeParse(
-        response.data.data
-      );
+        const validatedResponse = CustomerFormSchema.safeParse(
+          response.data.data
+        );
 
-      if (!validatedResponse.success) {
-        console.error(validatedResponse.error);
-        return;
+        if (!validatedResponse.success) {
+          console.error(validatedResponse.error);
+          return;
+        }
+
+        setCustomerForm(validatedResponse.data);
+      } catch (error) {
+        console.error(error);
+        router.push('/customer-form');
       }
-
-      setCustomerForm(validatedResponse.data);
     })();
-  }, [params.id]);
+  }, [params.id, router]);
 
   async function handleDelete() {
     if (!customerForm) {
